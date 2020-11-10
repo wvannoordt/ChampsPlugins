@@ -15,9 +15,9 @@ void Initialize(int argc, char** argv)
     if (argc < 4) {std::cout << "Not enough arguments to NACA geom!" << std::endl; abort();}
     int nz = std::stoi(argv[0]);
     double zmin = std::stod(argv[1]);
-	double zmax = std::stod(argv[2]);
-	double drmin = std::stod(argv[3]);
-	double data [1024];
+    double zmax = std::stod(argv[2]);
+    double drmin = std::stod(argv[3]);
+    double data [1024];
 #include "data.hpp"
     
     double* newPoints;
@@ -34,7 +34,6 @@ void Initialize(int argc, char** argv)
         if (dr>drmin || i==0 || i==256)
         {
             lasti = i;
-            //std::cout << "add " << i << ", dr = " << dr << ", (x,y)=(" << x1 << ", " << y1 << ")" << std::endl;
             idxes.push_back(i);
         }
     }
@@ -48,11 +47,12 @@ void Initialize(int argc, char** argv)
     }
     std::cout << "Reduced " << 512-idxes.size() << " points" << std::endl;
     geolytical::ExtrudedCurve2D foil3DLite(nz, zmin, zmax, newPoints, idxes.size());
-	geolytical::Curve2D foil2D(data, 512);
-	foil2D.OutputToVtk("output2D.vtk");
+    geolytical::Curve2D foil2D(data, 512);
+    foil2D.OutputToVtk("output2D.vtk");
     foil3DLite.OutputToVtk("output3D.vtk");
     
     delete[] newPoints;
+    std::cout << "Successfully generated NACA0012 Geometry. Exiting." << std::endl;
 }
 
 
