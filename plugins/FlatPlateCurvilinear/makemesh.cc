@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <cmath>
 #include <stdio.h>
-#define DEBUGOUTPUT 0
+#define DEBUGOUTPUT 1
 #define d_abs(myarg) (((myarg)<0) ? -(myarg) : (myarg))
 bool keepOld = false;
 inline bool FileExists (const std::string& name)
@@ -13,7 +13,7 @@ inline bool FileExists (const std::string& name)
     std::ifstream f(name.c_str());
     return f.good();
 }
-void OutputVtk(double* x, double* y, double* z, int nxNodes, int nyNodes, int nzNodes, std::string filename)
+void OutputVtk3D(double* x, double* y, double* z, int nxNodes, int nyNodes, int nzNodes, std::string filename)
 {
     std::ofstream myfile(filename);
     myfile << "# vtk DataFile Version 3.0" << std::endl;
@@ -35,7 +35,27 @@ void OutputVtk(double* x, double* y, double* z, int nxNodes, int nyNodes, int nz
     myfile << std::endl;
     myfile.close();
 }
-
+void OutputVtk2D(double* x, double* y, double* z, int nxNodes, int nyNodes, int nzNodes, std::string filename)
+{
+    std::ofstream myfile(filename);
+    myfile << "# vtk DataFile Version 3.0" << std::endl;
+    myfile << "vtk mesh output" << std::endl;
+    myfile << "ASCII" << std::endl;
+    myfile << "DATASET RECTILINEAR_GRID" << std::endl;
+    myfile << "DIMENSIONS " << nxNodes << " " << nyNodes << " " << 1 << std::endl;
+    myfile << "X_COORDINATES " << nxNodes << " double" << std::endl;
+    myfile << x[0];
+    for (int i = 1; i < nxNodes; i++) myfile << " " << x[i];
+    myfile << std::endl;
+    myfile << "Y_COORDINATES " << nyNodes << " double" << std::endl;
+    myfile << y[0];
+    for (int i = 1; i < nyNodes; i++) myfile << " " << y[i];
+    myfile << std::endl;
+    myfile << "Z_COORDINATES " << 1 << " double" << std::endl;
+    myfile << 0.0;
+    myfile << std::endl;
+    myfile.close();
+}
 void OutputCsv(double* x, double* y, double* z, int nxNodes, int nyNodes, int nzNodes)
 {
     std::ofstream myfilex("x.csv");
@@ -139,7 +159,7 @@ void OutputInfoFile(int xNodes, int yNodes, int zNodes, int blockSize, std::stri
     myfile.close();
 }
 
-void OutputMesh(double* x, double* z, double* y, int nx, int ny, int nz)
+void OutputMesh(double* x, double* y, double* z, int nx, int ny, int nz)
 {
     int numZones = 1;
     FILE* fileWriter;
@@ -228,8 +248,9 @@ void Initialize(int argc, char** argv)
     std::cout << "Estimated Timestep (s):   " << timePerStep << std::endl;
     
 #if(DEBUGOUTPUT)
-    OutputCsv(xNodes, yNodes, zNodes, nxNodes, nyNodes, nzNodes);
-    OutputVtk(xNodes, yNodes, zNodes, nxNodes, nyNodes, nzNodes, "test.vtk");
+    //OutputCsv(xNodes, yNodes, zNodes, nxNodes, nyNodes, nzNodes);
+    OutputVtk3D(xNodes, yNodes, zNodes, nxNodes, nyNodes, nzNodes, "mesh3D.vtk");
+    OutputVtk2D(xNodes, yNodes, zNodes, nxNodes, nyNodes, nzNodes, "mesh2D.vtk");
 #endif
     OutputInfoFile(nxNodes, nyNodes, nzNodes, blockSize, ".mesh.info");
     OutputMesh(xNodes, yNodes, zNodes, nxNodes, nyNodes, nzNodes);
