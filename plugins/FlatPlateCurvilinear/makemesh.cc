@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <cmath>
 #include <stdio.h>
+#include "NamedArgs.h"
 #define DEBUGOUTPUT 1
 #define d_abs(myarg) (((myarg)<0) ? -(myarg) : (myarg))
 bool keepOld = false;
@@ -194,20 +195,23 @@ extern "C"
 
 void Initialize(int argc, char** argv)
 {
-    double xmin = 0.0;
-    double xmax = 0.3984;
-    double ymin = 0.0;
-    double ymax = 0.0285;
-    double zmin = 0.0;
-    double zmax = 0.0512;
-    double growthRate = 1.06;
-    int growthBlocks = 2;
-    double Re = 6.0e6;
-    double Cf = 10e-4;
-    double dxPlus = 36.0;
-    double dyPlus = 1.0;
-    double dzPlus = 25.0;
-    int blockSize = 32;
+    NamedArgs args(argc, argv);
+    double xmin = args.Double("xmin");
+    double xmax = args.Double("xmax");
+    double ymin = args.Double("ymin");
+    double ymax = args.Double("ymax");
+    double zmin = args.Double("zmin");
+    double zmax = args.Double("zmax");
+    double growthRate = args.Double("growthRate");
+    int growthBlocks = args.Int("growthBlocks");
+    double Re = args.Double("Re");
+    double Cf = args.Double("Cf");
+    double dxPlus = args.Double("dxPlus");
+    double dyPlus = args.Double("dyPlus");
+    double dzPlus = args.Double("dzPlus");
+    int blockSize = args.Int("blockSize");
+    
+    
     keepOld = false;
     double dy = dyPlus / (Re * sqrt(0.5*Cf));
     double dx = dxPlus * (dy/dyPlus);
