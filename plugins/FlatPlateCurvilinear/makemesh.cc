@@ -222,9 +222,11 @@ void Initialize(int argc, char** argv)
     std::cout << "(dx, dy, dz)   = (" << dx << ", " << dy << ", " << dz << ")" << std::endl;
     
     int nxCells = blockSize*((int)((xmax-xmin)/dx)/blockSize);
+    if (nxCells < 1) nxCells = blockSize;
     int numBlocksX = nxCells/blockSize;
     int nzCells = blockSize*((int)((zmax-zmin)/dz)/blockSize);
-    int numBlocksZ = nzCells/blockSize;
+    if (nzCells < 1) nzCells = blockSize;
+    int numBlocksZ = nzCells/blockSize;    
     
     std::cout << "----- COMPUTE -----" << std::endl;
     int nyCells, numBlocksY;
