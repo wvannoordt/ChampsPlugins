@@ -3,7 +3,9 @@
 #include <string>
 #include "mpi.h"
 #include <cstdlib>
+#include <iostream>
 #include "IntError.h"
+#include <sstream>
 class InterpInfo
 {
     public:
