@@ -5,7 +5,7 @@ IDIR := ${CUR_DIR}/include
 
 main: setup
 	ln -sf ${CUR_DIR}/NamedArgs.h ${IDIR}/NamedArgs.h
-	g++ -fPIC -c ${CUR_DIR}/NamedArgs.cpp -o ${OBJD}/NamedArgs.o
+	g++ -fPIC -std=c++11 -c ${CUR_DIR}/NamedArgs.cpp -o ${OBJD}/NamedArgs.o
 	g++ -fPIC -shared ${OBJD}/*.o -o ${LIBD}/libNa.a
 
 setup:

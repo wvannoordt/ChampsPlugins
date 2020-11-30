@@ -1,4 +1,4 @@
-ALLDIRS := $(wildcard plugins/* utils/*)
+ALLDIRS := $(wildcard utils/* plugins/*)
 TARGET := 
 .PHONY: all
 all:
