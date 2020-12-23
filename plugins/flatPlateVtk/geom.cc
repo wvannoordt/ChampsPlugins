@@ -29,9 +29,29 @@ void sharp(double* x, double* y, double* z)
 	}
 }
 
+double rotationAngle;
+double rotationX;
+double rotationY;
+#define PI180 0.01745329251
+void rotate(double* x, double* y, double* z)
+{
+	double xprev = *x;
+	double yprev = *y;
+	double zprev = *z;
+	*x = (xprev-rotationX)*cos(PI180*rotationAngle) - (yprev-rotationY)*sin(PI180*rotationAngle) + rotationX;
+	*y = (xprev-rotationX)*sin(PI180*rotationAngle) + (yprev-rotationY)*cos(PI180*rotationAngle) + rotationY;
+}
+
 void Initialize(int argc, char** argv)
 {
 	NamedArgs args(argc, argv);
+	bool doRotation = args.HasArg("rotationAngle");
+	if (doRotation)
+	{
+		rotationAngle = args.Double("rotationAngle");
+		rotationX = args.Double("rotationX");
+		rotationY = args.Double("rotationY");
+	}
 	bbox bounds;
 	double bufferSize = 0.0;
 	bool is3d = args.Bool("is3d");
@@ -62,6 +82,10 @@ void Initialize(int argc, char** argv)
 		{
 			plate3.Deform(sharp);
 		}
+		if (doRotation)
+		{
+			plate3.Deform(rotate);
+		}
 		plate3.OutputToVtk(output);
 	}
 	else
@@ -70,6 +94,10 @@ void Initialize(int argc, char** argv)
 		if (doSharp)
 		{
 			plate2.Deform(sharp);
+		}
+		if (doRotation)
+		{
+			plate2.Deform(rotate);
 		}
 		plate2.OutputToVtk(output);
 	}
