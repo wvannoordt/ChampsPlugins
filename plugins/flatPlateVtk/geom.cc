@@ -65,7 +65,7 @@ void Initialize(int argc, char** argv)
 	if (args.HasArg("output")) output = args.String("output");
 	if (args.HasArg("bufferSize")) bufferSize = args.Double("bufferSize");
     bounds.ymin = -0.1;
-    bounds.ymax = 0.00001;
+    bounds.ymax = 1e-7;
 	if (args.HasArg("ymin")) bounds.ymin = args.Double("ymin");
 	if (args.HasArg("ymax")) bounds.ymax = args.Double("ymax");
     bounds.zmin = args.Double("zmin") - bufferSize;
