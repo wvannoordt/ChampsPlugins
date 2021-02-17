@@ -41,6 +41,12 @@ void rotate(double* x, double* y, double* z)
 	*x = (xprev-rotationX)*cos(PI180*rotationAngle) - (yprev-rotationY)*sin(PI180*rotationAngle) + rotationX;
 	*y = (xprev-rotationX)*sin(PI180*rotationAngle) + (yprev-rotationY)*cos(PI180*rotationAngle) + rotationY;
 }
+double componentId2Max;
+int componentFunc(double x, double y, double z)
+{
+	if (x < componentId2Max) return 2;
+	return 1;
+}
 
 void Initialize(int argc, char** argv)
 {
@@ -55,6 +61,11 @@ void Initialize(int argc, char** argv)
 	bbox bounds;
 	double bufferSize = 0.0;
 	bool is3d = args.Bool("is3d");
+	componentId2Max = -1e20;
+	if (args.HasArg("componentLim"))
+	{
+		componentId2Max = args.Double("componentLim");
+	}
 	int nx = args.Int("nx");
 	int nz = 1;
 	if(is3d)
@@ -78,6 +89,7 @@ void Initialize(int argc, char** argv)
 	if (is3d)
 	{
 		geolytical::FlatPlate plate3(nx, nz, bounds);
+		plate3.AddIntegerScalar("Components", componentFunc);
 		if (doSharp)
 		{
 			plate3.Deform(sharp);
@@ -91,6 +103,7 @@ void Initialize(int argc, char** argv)
 	else
 	{
 		geolytical::FlatLine plate2(nx, bounds);
+		plate2.AddIntegerScalar("Components", componentFunc);
 		if (doSharp)
 		{
 			plate2.Deform(sharp);
