@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <vector>
 class NamedArgs
 {
     public:
@@ -13,6 +14,9 @@ class NamedArgs
         bool Bool(std::string name);
         std::string String(std::string name);
         int Int(std::string name);
+        std::vector<int>  IntVec(std::string name);
+        std::vector<double> DoubleVec(std::string name);
+        void print(void);
     private:
         std::map<std::string, std::string> vals;
 };
