@@ -1,4 +1,6 @@
+#include <vector>
 #include "NamedArgs.h"
+#include "strunformat.h"
 
 NamedArgs::NamedArgs(int& argc, char**& argv)
 {
@@ -63,5 +65,61 @@ int NamedArgs::Int(std::string name)
     catch (...)
     {
         std::cout << "Argument \"" << name << "\" with value \"" << vals[name] << "\" could not be interpreted as int." << std::endl; abort();
+    }
+}
+
+std::vector<int> NamedArgs::IntVec(std::string name)
+{
+  std::vector<int> output;
+
+  if (!HasArg(name)) {std::cout << "Plugin is requesting argument called \"" << name << "\" of type int, but couldn't find it!" << std::endl; abort();}
+    try
+    {
+      std::string elements = "abc";
+      strunformat(vals[name],"[{}]", elements);
+      std::vector<std::string> temp = StringSplit(elements,",");
+      for (auto &s:temp)
+        {
+          output.push_back(std::stoi(s));
+        }
+      return output;
+      
+    }
+    catch (...)
+    {
+        std::cout << "Argument \"" << name << "\" with value \"" << vals[name] << "\" could not be interpreted as int." << std::endl; abort();
+    }
+    return output;
+}
+
+std::vector<double> NamedArgs::DoubleVec(std::string name)
+{
+  std::vector<double> output;
+
+  if (!HasArg(name)) {std::cout << "Plugin is requesting argument called \"" << name << "\" of type int, but couldn't find it!" << std::endl; abort();}
+    try
+    {
+      std::string elements = "abc";
+      strunformat(vals[name],"[{}]", elements);
+      std::vector<std::string> temp = StringSplit(elements,",");
+      for (auto &s:temp)
+        {
+          output.push_back(std::stod(s));
+        }
+      return output;
+      
+    }
+    catch (...)
+    {
+        std::cout << "Argument \"" << name << "\" with value \"" << vals[name] << "\" could not be interpreted as int." << std::endl; abort();
+    }
+    return output;
+}
+
+void NamedArgs::print(void)
+{
+  for (auto &p:vals)
+    {
+      std::cout << p.first << " = " << p.second  << std::endl;
     }
 }
