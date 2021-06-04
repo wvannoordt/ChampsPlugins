@@ -84,11 +84,14 @@ void Initialize(int argc, char** argv)
     bounds.xmin = args.Double("xmin") - bufferSize;
     bounds.xmax = args.Double("xmax") + bufferSize;
 	bool doSharp = false;
+	bool altTri = false;
+	if (args.HasArg("alignCentroids")) altTri = args.Bool("alignCentroids");
 	if (args.HasArg("doSharp")) doSharp = args.Bool("doSharp");
 	
 	if (is3d)
 	{
 		geolytical::FlatPlate plate3(nx, nz, bounds);
+		plate3.SetEnableAlignedCenters(altTri);
 		plate3.AddIntegerScalar("Components", componentFunc);
 		if (doSharp)
 		{
