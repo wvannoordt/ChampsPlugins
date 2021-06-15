@@ -113,9 +113,9 @@ void Initialize(int argc, char** argv)
             }
         } 
       xy_data_final = mirrorAndRearrangeNACA00xxData(xy_data);
+      geolytical::Curve2D foil2D(&xy_data_final[0], xy_data_final.size()/2);
       if (!is3D)
         {
-          geolytical::Curve2D foil2D(&xy_data_final[0], xy_data_final.size()/2);
           foil2D.AddIntegerScalar("Components",[](double x, double y, double z)
                                   {
                                     if (x < 0.075) return 2;
