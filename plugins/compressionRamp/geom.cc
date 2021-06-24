@@ -14,6 +14,7 @@ extern "C"
 double xRamp;
 double rampAngle;
 double yfp = 0.0;
+int rampComponent = 1;
 #define PI180 0.01745329251
 //compressionRamp = (is3d=@choose{${is3d},false,true},nx=768,nz=256,bufferSize=0.018,ymax=1e-7,zmin=${zmin},zmax=${zmax},xmin=${xmin},xmax=${xmax},angle=${rampAngle},output=output.vtk)
 
@@ -24,6 +25,12 @@ void ramp(double* x, double* y, double* z)
 	double deltaX = (*x) - xRamp;
 	double deltaY = deltaX*sin(PI180*rampAngle);
 	*y = *y + deltaY;
+}
+
+int comp(double x, double y, double z)
+{
+	if (x < xRamp) return 1;
+	return rampComponent;
 }
 
 void Initialize(int argc, char** argv)
@@ -45,6 +52,7 @@ void Initialize(int argc, char** argv)
 	std::string output = "output.vtk";
 	if (args.HasArg("output")) output = args.String("output");
 	if (args.HasArg("bufferSize")) bufferSize = args.Double("bufferSize");
+	if (args.HasArg("rampComponent")) rampComponent = args.Int("rampComponent");
 	
     bounds.ymin = -0.1;
     bounds.ymax = 1e-7;
@@ -57,17 +65,20 @@ void Initialize(int argc, char** argv)
     bounds.zmax = args.Double("zmax") + bufferSize;
     bounds.xmin = args.Double("xmin") - bufferSize;
     bounds.xmax = args.Double("xmax") + bufferSize;
+    
 	
 	if (is3d)
 	{
 		geolytical::FlatPlate plate3(nx, nz, bounds);
 		plate3.Deform(ramp);
+		plate3.AddIntegerScalar("Components", comp);
 		plate3.OutputToVtk(output);
 	}
 	else
 	{
 		geolytical::FlatLine plate2(nx, bounds);
 		plate2.Deform(ramp);
+		plate2.AddIntegerScalar("Components", comp);
 		plate2.OutputToVtk(output);
 	}
 	
