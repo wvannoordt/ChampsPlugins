@@ -1,4 +1,4 @@
-OUTPUT = ${CHAMPS_PLUGINS}/libAairfoilGeom.so
+OUTPUT = ${CHAMPS_PLUGINS}/libAAirfoilGeom.so
 NAPATH = $(shell pwd)/../../utils/NamedArgs
 .PHONY: main
 main:

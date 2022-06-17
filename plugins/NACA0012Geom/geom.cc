@@ -13,18 +13,20 @@ extern "C"
 void Initialize(int argc, char** argv)
 {
     if (argc < 4) {std::cout << "Not enough arguments to NACA geom!" << std::endl; abort();}
+    int npts = 1000;
     int nz = std::stoi(argv[0]);
     double zmin = std::stod(argv[1]);
     double zmax = std::stod(argv[2]);
     double drmin = std::stod(argv[3]);
-    double data [1024];
-#include "data.hpp"
+    //double data [1024];
+    double data [2*npts];
+#include "data_fine.hpp"
     
     double* newPoints;
     int numNewPoints;
     int lasti=0;
     std::vector<int> idxes;
-    for (int i = 0; i < 512; i++)
+    for (int i = 0; i < npts; i++)
     {
         double x1 = data[2*i];
         double x2 = data[2*lasti];
@@ -45,9 +47,9 @@ void Initialize(int argc, char** argv)
         newPoints[2*i] = data[2*idxes[i]];
         newPoints[2*i+1] = data[2*idxes[i]+1];
     }
-    std::cout << "Reduced " << 512-idxes.size() << " points" << std::endl;
+    std::cout << "Reduced " << npts-idxes.size() << " points" << std::endl;
     geolytical::ExtrudedCurve2D foil3DLite(nz, zmin, zmax, newPoints, idxes.size());
-    geolytical::Curve2D foil2D(data, 512);
+    geolytical::Curve2D foil2D(data, npts);
     foil2D.AddIntegerScalar("Components",[](double x, double y, double z)
                             {
                               if (x < 0.10  && y > 0.0) return 2;
