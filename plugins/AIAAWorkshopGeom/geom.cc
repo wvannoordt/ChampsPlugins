@@ -9,8 +9,8 @@ double h, Lx, Ly, Lz;
 #define XBL -0.62
 #define XSTART 0
 #define XEND 1
-#define LDEV 1.8
-#define LOUT 0.5
+#define LDEV 1.78
+#define LOUT 5.0
 #define YPLATE 0.22
 #define YMAX 1.16
 #define ZMAX 0.128
@@ -37,7 +37,7 @@ void deform(double* x, double* y, double* z)
 
 void Initialize(int argc, char** argv)
 {
-	double bufferSize = 0.1;
+	double bufferSize = 0.5;
     if (argc < 2) {std::cout << "Not enough arguments to AIAA geom!" << std::endl; abort();}
     int nz = std::stoi(argv[1]);
     int nx = std::stoi(argv[0]);
@@ -47,7 +47,7 @@ void Initialize(int argc, char** argv)
     	bufferSize = std::stod(argv[2]);
     	
     }
-	double swshift = 0.56;
+	double swshift = 0.0;
     h = 1.0;
     bounds.xmin = XBL-LDEV + swshift;
     bounds.xmax = XEND+LOUT + swshift;
